@@ -1,0 +1,245 @@
+// Seden Bayar EOPSY[LAB04]
+
+-----------------------------------------------------------------------------------------------------------------------
+// memory.conf
+______________
+
+// memset  virt page #  physical page #  R (read from)  M (modified) inMemTime (ns) lastTouchTime (ns)
+memset 0 0 0 0 0 0      
+memset 1 1 0 0 0 0      
+memset 2 2 0 0 0 0      
+memset 3 3 0 0 0 0      
+memset 4 4 0 0 0 0      
+memset 5 5 0 0 0 0      
+memset 6 6 0 0 0 0      
+memset 7 7 0 0 0 0                  
+// enable_logging 'true' or 'false'
+// When true specify a log_file or leave blank for stdout
+enable_logging true
+
+// log_file <FILENAME>
+// Where <FILENAME> is the name of the file you want output
+// to be print to.
+log_file tracefile
+
+// page size, defaults to 2^14 and cannot be greater than 2^26
+// pagesize <single page size (base 10)> or <'power' num (base 2)>
+pagesize 16384
+
+
+// addressradix sets the radix in which numerical values are displayed
+// 2 is the default value
+// addressradix <radix>
+addressradix 16
+
+// numpages sets the number of pages (physical and virtual)
+// 64 is the default value
+// numpages must be at least 2 and no more than 64
+// numpages <num>
+numpages 64
+
+-----------------------------------------------------------------------------------------------------------------------
+
+// sh script for increasing the value of page_dir between 
+length of page (16384) defined in memory.conf
+
+#!/bin/bash
+
+page_dir=0
+
+for i in {1..63}
+do
+        page_dir=$(expr $page_dir + 16384)
+	echo "READ $page_dir" >> commands
+done
+
+
+-----------------------------------------------------------------------------------------------------------------------
+// commands
+____________
+
+// Enter READ/WRITE commands into this file
+// READ <OPTIONAL number type: bin/hex/oct> <virtual memory address or random>
+// WRITE <OPTIONAL number type: bin/hex/oct> <virtual memory address or random>
+
+
+READ 1000
+READ 16384
+READ 32768
+READ 49152
+READ 65536
+READ 81920
+READ 98304
+READ 114688
+READ 131072
+READ 147456
+READ 163840
+READ 180224
+READ 196608
+READ 212992
+READ 229376
+READ 245760
+READ 262144
+READ 278528
+READ 294912
+READ 311296
+READ 327680
+READ 344064
+READ 360448
+READ 376832
+READ 393216
+READ 409600
+READ 425984
+READ 442368
+READ 458752
+READ 475136
+READ 491520
+READ 507904
+READ 524288
+READ 540672
+READ 557056
+READ 573440
+READ 589824
+READ 606208
+READ 622592
+READ 638976
+READ 655360
+READ 671744
+READ 688128
+READ 704512
+READ 720896
+READ 737280
+READ 753664
+READ 770048
+READ 786432
+READ 802816
+READ 819200
+READ 835584
+READ 851968
+READ 868352
+READ 884736
+READ 901120
+READ 917504
+READ 933888
+READ 950272
+READ 966656
+READ 983040
+READ 999424
+READ 1015808
+READ 1032192
+
+
+-----------------------------------------------------------------------------------------------------------------------
+// tracefile
+_____________
+
+READ 3e8 ... okay
+READ 4000 ... okay
+READ 8000 ... okay
+READ c000 ... okay
+READ 10000 ... okay
+READ 14000 ... okay
+READ 18000 ... okay
+READ 1c000 ... okay
+READ 20000 ... okay
+READ 24000 ... okay
+READ 28000 ... okay
+READ 2c000 ... okay
+READ 30000 ... okay
+READ 34000 ... okay
+READ 38000 ... okay
+READ 3c000 ... okay
+READ 40000 ... okay
+READ 44000 ... okay
+READ 48000 ... okay
+READ 4c000 ... okay
+READ 50000 ... okay
+READ 54000 ... okay
+READ 58000 ... okay
+READ 5c000 ... okay
+READ 60000 ... okay
+READ 64000 ... okay
+READ 68000 ... okay
+READ 6c000 ... okay
+READ 70000 ... okay
+READ 74000 ... okay
+READ 78000 ... okay
+READ 7c000 ... okay
+READ 80000 ... page fault
+READ 84000 ... page fault
+READ 88000 ... page fault
+READ 8c000 ... page fault
+READ 90000 ... page fault
+READ 94000 ... page fault
+READ 98000 ... page fault
+READ 9c000 ... page fault
+READ a0000 ... page fault
+READ a4000 ... page fault
+READ a8000 ... page fault
+READ ac000 ... page fault
+READ b0000 ... page fault
+READ b4000 ... page fault
+READ b8000 ... page fault
+READ bc000 ... page fault
+READ c0000 ... page fault
+READ c4000 ... page fault
+READ c8000 ... page fault
+READ cc000 ... page fault
+READ d0000 ... page fault
+READ d4000 ... page fault
+READ d8000 ... page fault
+READ dc000 ... page fault
+READ e0000 ... page fault
+READ e4000 ... page fault
+READ e8000 ... page fault
+READ ec000 ... page fault
+READ f0000 ... page fault
+READ f4000 ... page fault
+READ f8000 ... page fault
+READ fc000 ... page fault
+
+
+-----------------------------------------------------------------------------------------------------------------------
+// conclusion
+______________
+
+The memory management simulator illustrates page fault behavior in a paged virtual memory system. 
+The program reads the initial state of the page table and a sequence of virtual memory instructions 
+and writes a trace log indicating the effect of each instruction. It includes a graphical user 
+interface so that page replacement algorithms can be observed.
+
+In this task the concept is to configure and run a memory management simulator. It would map any 8 
+pages of physical memory to the first 8 pages of virtual memory, and then reads from one virtual 
+memory address on each of the 64 virtual pages. Then, following the conclusions of the output of the 
+program, we can predict which virtual memory addresses trigger page faults and determine what page to 
+replacement algorithm is being used. We are able to edit two files "commands" and "memory.conf" to set 
+a proper configuration and we can see the outputs in "tracefile" and on a special graphical interface 
+(MOSS).
+
+Firstly, it is impossible to map only 8 pages and read from a single virtual memory address on each of 
+the 64 pages, since the number of pages was always equal to the total number of physical and virtual 
+pages mapped. For example, when the number of pages parameter is set to 64, the simulator always mapped 
+32 physicals to 32 virtual pages. We would presume that is by running the simulator will show the page 
+faults after page 31. This means that the interruption caused by the memory management unit of the central 
+processor when the software tries to access a page that has been mapped to the virtual address space but 
+is not currently loaded to the physical memory. While we have got page faults, virtual pages are still 
+sequentially allocated in the physical ones.
+
+Page Replacement Algorithm is an algorithm that determines what pages should be written to disk when a new 
+page needs to be allocated. The algorithm used to replace pages is called FIFO, which means "First-In First-Out". 
+The FIFO replacement algorithm links to each page when that page was added to the memory; the oldest page is 
+selected when the page is being replaced. Shortly it uses to replacement the frame whose page has been in memory 
+for the longest time. Page frames are kept in a queue and the frame that was used lately is moved to the tail 
+and in the next replacement the next page from the queue is used. It means we can build a FIFO queue to hold all 
+the pages on the memory disk. We replace the page at the head of the queue. We insert a page at the end of the 
+queue when a page is added to the memory disk.
+
+The disadvantage of the FIFO algorithm is low efficiency as it does not take into account which pages are 
+frequently used and which are used once. For example, a much better page replacement algorithm would be the 
+LRU (Least Recently Used) memory management algorithm or the priority list.
+
+
+
+
+
+
